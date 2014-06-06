@@ -250,6 +250,7 @@ def _exception_handler(result):
     thrown by ActionKit
     '''
     url = result.url
+
     try:
         response_content = result.json()
     except Exception:
@@ -260,9 +261,7 @@ def _exception_handler(result):
         message = message.format(url=url, content=response_content)
         raise ActionKitMoreThanOneRecord(message)
     elif result.status_code == 400:
-        message = "Malformed request {url}. Response content: {content}"
-        message = message.format(url=url, content=response_content)
-        raise ActionKitMalformedRequest(message)
+        raise ActionKitMalformedRequest(response_content)
     elif result.status_code == 401:
         message = "Expired session for {url}. Response content: {content}"
         message = message.format(url=url, content=response_content)
